@@ -22,16 +22,45 @@ namespace FileManager
             }
         }
 
+        
+        public void CreateFile(string srcPath, string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    UpdateFile(srcPath, path);
+                }
+                else
+                {
+                    CopyContent(srcPath, path);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("No such file in source directory");
+            }
+        }
+
+        
         public void DeleteFile(string path)
         {
             File.Delete(path);
         }
 
+        
         public void UpdateFile(string path)
         {
             CreateFile(IncrementVersion(path));
         }
 
+        
+        public void UpdateFile(string srcPath, string path)
+        {
+            CreateFile(srcPath, IncrementVersion(path));
+        }
+
+        
         public string GetFile(string path)
         {
             var list = new List<string>();
@@ -71,6 +100,13 @@ namespace FileManager
             return list[num];
         }
 
+        
+        public void CopyContent(string srcPath, string destPath)
+        {
+            FileInfo fileName = new FileInfo(srcPath);
+            fileName.CopyTo(destPath, true);
+        }
+
 
         private string IncrementVersion (string path)
         {
@@ -91,6 +127,7 @@ namespace FileManager
             return path;
         }
 
+        
         private string ExtractDirectoryNameFromPath(string path)
         {
             var str = "";
@@ -124,7 +161,5 @@ namespace FileManager
         {
             return path.Split('.').Last();
         }
-        
-        
     }
 }
